@@ -17,12 +17,20 @@ public partial class NewAccountPage : ContentPage
     }
 
     async void CreateAccount_OnClicked(object sender, EventArgs e)
-    //do passwords match
-    
-    //is the email address valid = @ and .
-    
-    
     {
+        if (txtPassword1.Text != txtPassword2.Text) //if passwords don't match
+        {
+            await DisplayAlert("Error", "Passwords do not match", "Ok");
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(txtEmail.Text) || //is the email address valid = @ and .
+            !txtEmail.Text.Contains("@") || 
+            !txtEmail.Text.Contains("."))
+        {
+            await DisplayAlert("Error", "Please enter a valid email address", "Ok");
+            return;
+        }
+        
         //API stuff
         var data = JsonConvert.SerializeObject(new UserAccount(txtUser.Text, txtPassword1.Text, txtEmail.Text));
         var client = new HttpClient();
@@ -30,7 +38,7 @@ public partial class NewAccountPage : ContentPage
 
         var AccountStatus = response.Content.ReadAsStringAsync().Result;
        
-        //does user exist
+        //does username exist
         if (AccountStatus == "user exists")
         {
             await DisplayAlert("Error", "Sorry, this username is taken", "OK");
