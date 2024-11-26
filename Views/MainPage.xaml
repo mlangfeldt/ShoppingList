@@ -24,7 +24,6 @@
            <Button Grid.Row="0" Grid.Column= "1" Text="Add" Clicked="AddData_OnClicked"/>
            <Button Grid.Row="0" Grid.Column= "2" Text="Logout" Clicked="Logout_OnClicked"/>
            
-           
            <ListView IsPullToRefreshEnabled="True" x:Name="lstData" Grid.Row="1" Grid.Column= "0" Grid.ColumnSpan="3">
                <ListView.ItemTemplate> 
                    <DataTemplate>
@@ -37,7 +36,7 @@
                </ListView.ItemTemplate>
            </ListView>
            
-           <Button Grid.Row="2" Grid.Column= "0" Grid.ColumnSpan="3" Text="Clear List"/>
+           <Button Grid.Row="2" Grid.Column= "0" Grid.ColumnSpan="3" Text="Clear List" Clicked="ClearList_OnClicked"/>
            
            
        </Grid>

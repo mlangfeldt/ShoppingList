@@ -11,6 +11,7 @@ namespace ShoppingList.Views;
 public partial class MainPage : ContentPage
 {
     private LoginPage LP = new LoginPage();
+
     public MainPage()
     {
         InitializeComponent();
@@ -18,11 +19,11 @@ public partial class MainPage : ContentPage
         this.Loaded += MainPage_Loaded;
         LP.Unloaded += LP_Unloaded;
         lstData.Refreshing += LstDataOnRefreshing;
-           
+
     }
 
     async void LstDataOnRefreshing(object sender, EventArgs e)
-    { 
+    {
         LoadData();
         lstData.IsRefreshing = false;
     }
@@ -31,6 +32,7 @@ public partial class MainPage : ContentPage
     {
         OnAppearing1();
     }
+
     private void LP_Unloaded(object sender, EventArgs e)
     {
         OnAppearing1();
@@ -52,24 +54,25 @@ public partial class MainPage : ContentPage
     {
         var data = JsonConvert.SerializeObject(new UserAccount(App.SessionKey));
         var client = new HttpClient();
-        
-        await client.PostAsync(new Uri("https://joewetzel.com/fvtc/account/logout"), 
-            new StringContent(data,Encoding.UTF8,"application/json"));
+
+        await client.PostAsync(new Uri("https://joewetzel.com/fvtc/account/logout"),
+            new StringContent(data, Encoding.UTF8, "application/json"));
         App.SessionKey = "";
         OnAppearing1();
     }
 
     async void AddData_OnClicked(object sender, EventArgs e)
     {
-        var data = JsonConvert.SerializeObject(new UserData(null, txtInput.Text,App.SessionKey));
+        var data = JsonConvert.SerializeObject(new UserData(null, txtInput.Text, App.SessionKey));
         var client = new HttpClient();
-        
-        await client.PostAsync(new Uri("https://joewetzel.com/fvtc/account/data"), 
-            new StringContent(data,Encoding.UTF8,"application/json"));
+
+        await client.PostAsync(new Uri("https://joewetzel.com/fvtc/account/data"),
+            new StringContent(data, Encoding.UTF8, "application/json"));
 
         txtInput.Text = "";
         LoadData();
     }
+
     async void LoadData()
     {
         var client = new HttpClient();
@@ -84,7 +87,7 @@ public partial class MainPage : ContentPage
     async void MenuItem_OnClicked(object sender, EventArgs e)
     {
         var dataID = ((MenuItem)sender).CommandParameter.ToString();
-        var data = JsonConvert.SerializeObject(new UserData(dataID, null,App.SessionKey));
+        var data = JsonConvert.SerializeObject(new UserData(dataID, null, App.SessionKey));
 
         var client = new HttpClient();
         var request = new HttpRequestMessage
@@ -98,4 +101,20 @@ public partial class MainPage : ContentPage
         LoadData();
 
     }
-}
+
+    async void ClearList_OnClicked(object sender, EventArgs e)
+    {
+        var data = JsonConvert.SerializeObject(new UserAccount(App.SessionKey));
+        var client = new HttpClient();
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Delete,
+            RequestUri = new Uri("https://joewetzel.com/fvtc/account/data"),
+            Content = new StringContent(data, Encoding.UTF8, "application/json")
+        };
+
+        await client.SendAsync(request);
+        LoadData();
+
+    }
+    }
